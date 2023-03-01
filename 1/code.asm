@@ -2,12 +2,16 @@ org 0x7c00
 res=2
 include "H_FAT.asm"
 
+
+
 xor dx, dx
 mov ax, 0x0201
 mov cx, 2
 mov bx, 0x500
 int 13h
 jmp 0x500
+
+
 
 times 510-($-$$) db 0
 db 0x55, 0xaa	
