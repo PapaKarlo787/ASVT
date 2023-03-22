@@ -1,0 +1,11 @@
+fasm code.asm os.img
+mkdir q 2> /dev/null
+sudo mount os.img q
+cd q
+for i in `ls ../progs/*.asm`; do echo $i; fasm ../progs/$i; done
+sudo mv ../progs/*.com ./
+sudo mkdir qwe
+for i in `seq 20`; do sudo mkdir qwe/$i; done
+cd ..
+sudo umount q
+qemu-system-i386 -fda os.img

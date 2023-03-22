@@ -4,6 +4,7 @@ db "ASVT FAT"
 dw 512
 db 1 	; sec per clust
 dw res 	; <-------------- reserved sectors (depends of size this file)
+fats:
 db 1 	; fats
 dw 0 	; count elem in root
 dw 2880 ; sectors
@@ -13,8 +14,10 @@ dw 18	; sec per track
 dw 2	; heads
 dd 0	; hiden sectors
 dd 0	; total sectors (0 if size < 32mb)
+spf:
 dd 23	; <-------------- sec per fat (depends [weak] of size this file) 
 dd 0
+root_p:
 dd 2
 dw 1
 dw 1
