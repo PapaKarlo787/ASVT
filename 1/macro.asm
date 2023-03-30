@@ -40,7 +40,6 @@ macro prep_exec
 {
 	mov [free_mem_edge], es
 	mov ax, es
-	sub ax, 15
 	mov es, ax
 	mov ds, ax
 	mov fs, ax
