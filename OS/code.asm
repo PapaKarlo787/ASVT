@@ -93,9 +93,9 @@ act:
 	je .file
 	mov [cur_dir], bp
 	jmp load_dir
-	
+
 .file:
-	mov bx, 16
+	mov bx, 256
 	call load_data
 	prep_exec
 	push es

@@ -40,13 +40,12 @@ macro prep_exec
 {
 	mov [free_mem_edge], es
 	mov ax, es
-	sub ax, 15
 	mov es, ax
 	mov ds, ax
 	mov fs, ax
 	mov ss, ax
 	mov gs, ax
-	mov word [es:240], 0x20cd
+	mov word [es:0], 0x20cd
 	xor ax, ax
 	mov bx, ax
 	mov cx, ax
@@ -55,5 +54,5 @@ macro prep_exec
 	mov di, ax
 	mov sp, ax
 	mov bp, ax
-	push 240
+	push sp
 }
