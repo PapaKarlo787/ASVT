@@ -19,6 +19,10 @@ lp_res:
 	mov [free_mem_edge], bx
 	mov ax, [root_p]
 	mov word [cur_dir], ax
+	mov word [cs:0x20*4], int20
+	mov word [cs:0x20*4+2], cs
+	mov word [cs:0x27*4], int27
+	mov word [cs:0x27*4+2], cs
 	jmp load_dir
 
 times 510-($-$$) db 0
