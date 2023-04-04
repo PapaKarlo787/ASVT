@@ -1,6 +1,6 @@
 fasm code.asm os.img
 mkdir q 2> /dev/null
-sudo mount os.img q
+sudo mount -t vfat os.img q
 cd q
 for i in `ls ../progs/*.asm`; do echo $i; fasm ../progs/$i; done
 sudo mv ../progs/*.com ./
