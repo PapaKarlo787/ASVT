@@ -7,7 +7,7 @@ include "1_loader.asm"
 org free	
 load_dir:
 	prep_env
-	mov bp, [cur_dir]
+	mov bp, [cs:cur_dir]
 	call load_data
 	mov bp, si
 pnames:
@@ -48,7 +48,7 @@ pnames:
 	jne pnames
 	shr bp, 2
 	dec bp
-	mov [max_file_num], bp
+	mov [cs:max_file_num], bp
 
 	xor di, di
 	mov bx, di
@@ -66,7 +66,7 @@ act:
 	cmp ah, 0x50
 	jne act
 .down:
-	cmp bx, [max_file_num]
+	cmp bx, [cs:max_file_num]
 	je act
 	mov al, 0x07
 	call paint

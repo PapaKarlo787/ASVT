@@ -24,6 +24,6 @@ int27:
 	add dx, 15
 .ni:
 	shr dx, 4
-	add [free_mem_edge], dx
+	add [cs:free_mem_edge], dx
 int20:
 	jmp load_dir
