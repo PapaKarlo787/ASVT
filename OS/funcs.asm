@@ -7,8 +7,6 @@ paint:
 	sub di, 40
 	ret
 
-
-
 load_data:
 	mov ax, bp
 	add ax, [startDataSec]
@@ -19,3 +17,13 @@ load_data:
 	cmp bp, 0xfff8
 	jb load_data
 	ret
+
+int27:
+	test dx, 15
+	jz .ni
+	add dx, 15
+.ni:
+	shr dx, 4
+	add [free_mem_edge], dx
+int20:
+	jmp load_dir
