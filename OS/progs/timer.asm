@@ -1,12 +1,12 @@
 org 100h
-jmp x
+jmp _start
 int8:
 	push es
 	push di
 	push cx
 	push ax
-	mov al, [cs:.x-$$]
-	add byte[cs:.x-$$], 16
+	mov al, [cs:.x]
+	add byte[cs:.x], 16
 	push 0xb800
 	pop es
 	mov cx, 2000
@@ -22,16 +22,13 @@ int8:
 	pop di
 	pop es
 	iret
-.x: db 7 ; .x=300
-x=$
+.x: db 7
 
+_start:
 	pop fs
 	cli
-	mov word [fs:8*4], int8-$$
+	mov word [fs:8*4], int8
 	mov word [fs:8*4+2], cs
 	sti
-	mov si, 100h
-	mov cx, x-$$
-	rep movsb
-	mov dx, x-$$
+	mov dx, _start
 	int 0x27
