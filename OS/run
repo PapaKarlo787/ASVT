@@ -8,4 +8,4 @@ sudo mkdir qwe
 for i in `seq 20`; do sudo mkdir qwe/$i; done
 cd ..
 sudo umount q
-qemu-system-i386 -fda os.img
+qemu-system-i386 -soundhw all -fda os.img
