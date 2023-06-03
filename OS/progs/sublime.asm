@@ -169,6 +169,12 @@ print_screen:
 	mov bh, 0
 	mov dx, 0x1900
 	int 10h
+	mov bp, d
+	mov cx, 128
+	mov ax, 0x1100
+	mov bx, 0x1000
+	mov dx, 128
+	int 10h
 	
 	xor bx, bx
 	mov ax, bx
