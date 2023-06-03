@@ -2,6 +2,10 @@ org 100h
 
 mov ax, 2
 int 10h
+mov ah, 2
+mov bh, 0
+mov dx, 0x1900
+int 10h
 
 mov bp, d
 mov cx, 128
@@ -25,17 +29,13 @@ _start:
 	xor ax, ax
 	int 16h
 	cmp ah, 1
-	je r
-	jmp editor
-r:
+	jne editor
 	ret
 editor:
 	mov bx, [cs:cursor_pos_buf]
 	
-	;cmp ah, 0x1a ; [{
 	cmp ah, 0x4b ; Left
 	je left
-	;cmp ah, 0x1b ; ]}
 	cmp ah, 0x4d ; Right
 	je right
 	cmp ah, 0x1c ; Enter
@@ -44,9 +44,10 @@ editor:
 	je tab
 	cmp ah, 0x0e ; Backspace
 	je backspace
-	;cmp ah, 0x2b ; \|
 	cmp ah, 0x53 ; Delete
 	je del
+	cmp al, '\'
+	je bs
 	jmp symbol
 
 left:
@@ -57,11 +58,11 @@ left:
 	jmp print
 
 right:
-	cmp word bx, [cs:buf_size]
+	cmp bx, [cs:buf_size]
 	je next
 	mov ax, [cs:buf_max_size]
 	sub ax, 2
-	cmp word bx, ax
+	cmp bx, ax
 	je next
 	
 	add bx, 2
@@ -105,7 +106,14 @@ del:
 	pop bx
 	sub word [cs:buf_size], 2
 	jmp print
-
+bs:
+	mov ax, "\\"
+	push bx
+	call shift
+	pop bx
+	add bx, 2
+	add word [cs:buf_size], 2
+	jmp print
 symbol:
 	push bx
 	call shift
@@ -117,7 +125,6 @@ symbol:
 	add bx, 2
 .skip_shift_cur:
 	add word [cs:buf_size], 2
-	jmp print
 
 print:
 	mov ax, [cs:buf_max_size]
@@ -158,6 +165,10 @@ shift:
 print_screen:
 	mov ax, 2
 	int 10h
+	mov ah, 2
+	mov bh, 0
+	mov dx, 0x1900
+	int 10h
 	
 	xor bx, bx
 	mov ax, bx
@@ -167,15 +178,13 @@ print_screen:
 	jne .skip_print_cur
 	mov byte [fs:di + 1], 83
 .skip_print_cur:
-	;cmp bx, [cs:buf_size]
-	;je .end_print
 	cmp bx, [cs:buf_max_size]
 	je .end_print
 	
 	mov al, [es:bx]
 	cmp al, "\"
 	jne .not_spec
-	
+
 	inc bx
 	mov al, [es:bx]
 	
@@ -195,12 +204,17 @@ print_screen:
 	mov cx, 160
 	div cx
 .end_mod:
-	mov ax, 160
-	sub ax, dx
-	add di, ax
+	add di, 160
+	sub di, dx
 	
 	jmp .end_spec
 .not_enter:
+	cmp al, "\"
+	jne .not_back_slash
+	mov byte [fs:di], '\'
+	add di, 2
+	
+.not_back_slash:
 .end_spec:
 	dec bx
 	jmp .loop_end
@@ -212,13 +226,10 @@ print_screen:
 	jmp .loop_start
 .end_print:
 	ret
-
-
 d: 
 	file "font2.fnt": 2048
 
 cursor_pos_buf: dw 0
-;buf_max_size: dw 65535
-buf_max_size: dw 1024
+buf_max_size: dw 2048
 buf_size: dw 0
 buf:
